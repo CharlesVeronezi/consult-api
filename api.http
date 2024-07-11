@@ -1,0 +1,60 @@
+POST http://localhost:3000/auth/signup/manager
+Content-Type: application/json
+
+{
+    "name": "Teste",
+    "email": "testeteste@gmail.com",
+    "password": "teste1234",
+    "passwordConfirmation": "teste1234"
+}
+
+###
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "email": "teste@gmail.com",
+    "password": "teste1234"
+}
+
+###
+GET http://localhost:3000/auth/profile
+Content-Type: application/json
+
+###
+POST http://localhost:3000/professional
+Content-Type: application/json
+
+{
+    "name": "Charles",
+    "email": "teste@gmail.com",
+    "telephone": "51985821237",
+    "cpf": "12345678900",
+    "companyId": "14cc0666-f70c-4686-8cc6-26136cb63f07",
+    "userId": "372c9ed2-42de-4238-b2c2-c28fb1114b74"
+}
+
+###
+POST http://localhost:3000/company
+Content-Type: application/json
+
+{
+    "name": "Teste Company",
+    "address": "Rua de teste 160",
+    "telephone": "51985821237",
+    "email": "testecompany@gmail.com",
+    "cnpj": "1234567890001"
+}
+
+###
+POST http://localhost:3000/auth/token
+Content-Type: application/json
+
+{
+    "jwt": "",
+    "companyId": "14cc0666-f70c-4686-8cc6-26136cb63f07"
+}
+
+###
+GET http://localhost:3000/company/14cc0666-f70c-4686-8cc6-26136cb63f07
+Content-Type: application/json

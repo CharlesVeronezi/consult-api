@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id             String           @id @default(uuid())
+  name           String
+  address        String
+  telephone      String
+  email          String
+  cnpj           String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  Professional   Professional[]
+  Authentication Authentication[]
+}
+
+model Professional {
+  id           String         @id @default(uuid())
+  name         String
+  email        String
+  telephone    String
+  cpf          String
+  companyId    String
+  userId       String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Company      Company        @relation(fields: [companyId], references: [id])
+  User         User           @relation(fields: [userId], references: [id])
+  Consult      Consult[]
+  Availability Availability[]
+}
+
+model Client {
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  telephone String
+  cpf       String
+  address   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Consult   Consult[]
+}
+
+model Consult {
+  id             String        @id @default(uuid())
+  clientId       String
+  professionalId String
+  date           String
+  hour           String
+  status         ConsultStatus
+  observation    String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Client         Client        @relation(fields: [clientId], references: [id])
+  Professional   Professional  @relation(fields: [professionalId], references: [id])
+}
+
+enum ConsultStatus {
+  scheduled
+  cancelled
+  completed
+}
+
+model Availability {
+  id             Int          @id @default(autoincrement())
+  professionalId String
+  date           String
+  startTime      String
+  endTime        String
+  Professional   Professional @relation(fields: [professionalId], references: [id])
+}
+
+model User {
+  id                String         @id @default(uuid())
+  email             String
+  password          String
+  name              String
+  role              UserRole
+  status            Boolean        @default(true)
+  salt              String
+  confirmationToken String?
+  recoverToken      String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  Professional      Professional[]
+
+  @@unique([email])
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  PROFESSIONAL
+}
+
+model Authentication {
+  id        String   @id @default(uuid())
+  jwt       String   @unique
+  companyId String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Company   Company  @relation(fields: [companyId], references: [id])
+}
